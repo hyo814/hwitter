@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { dbService } from "fbase";
+import Hweet from "components/Hweet";
 
-const Home = () => {
+const Home = ({ userObj }) => {
     const [hweet, setHweet] = useState("");
     const [hweets, setHweets] = useState([]);
-    const getHweets = async () => {
-        const dbHweets = await dbService.collection("hweets").get();
-        dbHweets.forEach((document) => {
-            const hweetObject = {
-                ...document.data(),
-                id: document.id,
-            };
-            setHweets((prev) => [hweetObject, ...prev]);
-        });
-    };
+
     useEffect(() => {
-        getHweets();
+        dbService.collection("hweets").onSnapshot((snapshot) => {
+            const hweetArray = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            setHweets(hweetArray);
+        });
     }, []);
     const onSubmit = async (event) => {
         event.preventDefault();
         await dbService.collection("hweets").add({
             hweet,
+            text: hweet,
             createdAt: Date.now(),
+            creatorId: userObj.uid,
         });
         setHweet("");
     };
@@ -31,24 +31,26 @@ const Home = () => {
         } = event;
         setHweet(value);
     };
-    console.log(hweets);
+
     return (
-        <div>
+        <div className="container">
             <form onSubmit={onSubmit}>
                 <input
                     value={hweet}
                     onChange={onChange}
                     type="text"
-                    placeholder="What's on your mind?"
+                    placeholder="무슨 일이 일어날까요?"
                     maxLength={120}
-                />
+                />&nbsp;
                 <input type="submit" value="Hweet" />
             </form>
-            <div>
+            <div style={{ marginTop: 50 }}>
                 {hweets.map((hweet) => (
-                    <div key={hweet.id}>
-                        <h4>{hweet.hweet}</h4>
-                    </div>
+                     <Hweet
+                        key={hweet.id}
+                        hweetObj={hweet}
+                        isOwner={hweet.creatorId === userObj.uid}
+                    />
                 ))}
             </div>
         </div>

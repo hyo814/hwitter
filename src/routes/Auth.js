@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faTwitter,
+    faGoogle,
+    faGithub,
+} from "@fortawesome/free-brands-svg-icons";
+import Button from 'react-bootstrap/Button'
 import { authService, firebaseInstance } from "fbase";
 
 const Auth = () => {
@@ -52,8 +59,15 @@ const Auth = () => {
     };
 
     return (
-        <div>
+        <div className="authContainer">
+            <FontAwesomeIcon
+                icon={faTwitter}
+                color={"#04AAFF"}
+                size="3x"
+                style={{ marginBottom: 30 }}
+            />
             <form onSubmit={onSubmit}>
+                아이디&nbsp;
                 <input
                     name="email"
                     type="text"
@@ -61,7 +75,8 @@ const Auth = () => {
                     required
                     value={email}
                     onChange={onChange}
-                />
+                /><br/>
+                패스워드&nbsp;
                 <input
                     name="password"
                     type="password"
@@ -69,23 +84,23 @@ const Auth = () => {
                     required
                     value={password}
                     onChange={onChange}
-                />
+                /><br/><br/>
                 <input
                     type="submit"
-                    value={newAccount ? "Create Account" : "Sign In"}
+                    value={newAccount ? "계정 가입하기" : "로그인 하기"}
                 />
-                {error}
-            </form>
+                {error}&nbsp;
             <span onClick={toggleAccount}>
-                {newAccount ? "Sign In" : "Create Account"}
+                {newAccount ? "로그인 하기" : "계정 가입하기"}
             </span>
-            <div>
-                <button onClick={onSocialClick} name="google">
-                    Continue with Google
-        </button>
-                <button onClick={onSocialClick} name="github">
-                    Continue with Github
-        </button>
+            </form><br/>
+            <div className="authBtns">
+                <Button onClick={onSocialClick} name="google">
+                    "Google"로 시작하기<FontAwesomeIcon icon={faGoogle} />
+                </Button>&nbsp;
+                <Button onClick={onSocialClick} name="github">
+                    "Github"으로 시작하기<FontAwesomeIcon icon={faGithub} />
+                </Button>
             </div>
         </div>
     );

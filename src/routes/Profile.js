@@ -9,8 +9,10 @@ export default () => {
         history.push("/");
     };
     return (
-        <>
-            <button onClick={onLogOutClick}>Log Out</button>
-        </>
+        <div className="container">
+        <span className="formBtn cancelBtn logOut" onClick={onLogOutClick}>
+        로 그 아 웃
+        </span>        
+      </div>
     );
 };
